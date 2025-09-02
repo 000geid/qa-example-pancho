@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calculadora de Verduras para Conejos</title>
+    <h2>¿Cuántos gramos de verdura debe comer Pancho?</h2>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; }
+      .card { max-width: 520px; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+      h1 { font-size: 1.25rem; margin: 0 0 1rem; }
+      label { display: block; margin-bottom: .5rem; }
+      input { width: 100%; padding: .6rem .7rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; }
+      button { margin-top: .75rem; padding: .6rem .9rem; background: #16a34a; color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+      button:disabled { background: #9ca3af; cursor: not-allowed; }
+      .resultado { margin-top: 1rem; font-weight: 600; }
+      .nota { margin-top: .5rem; color: #374151; font-size: .9rem; }
+      .error { color: #b91c1c; margin-top: .5rem; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Calculadora de verduras para conejos</h1>
+
+      <label for="peso">Peso del conejo (kg)</label>
+      <input id="peso" type="number" step="0.01" min="0.1" placeholder="Ej. 1.8" />
+      <button id="btn">Calcular</button>
+
+      <div id="resultado" class="resultado"></div>
+      <div id="nota" class="nota">Regla utilizada: 100 gramos por cada kg.</div>
+      <div id="error" class="error"></div>
+    </div>
+
+    <script>
+      const pesoInput = document.getElementById('peso');
+      const btn = document.getElementById('btn');
+      const resultado = document.getElementById('resultado');
+      const error = document.getElementById('error');
+
+      function limpiarMensajes() {
+        resultado.textContent = '';
+        error.textContent = '';
+      }
+
+      btn.addEventListener('click', async () => {
+        limpiarMensajes();
+        const valor = parseFloat(pesoInput.value);
+        if (isNaN(valor) || valor <= 0) {
+          error.textContent = 'Por favor ingresa un peso válido (> 0).';
+          return;
+        }
+        btn.disabled = true;
+        try {
+          // Si se abre el archivo directamente (file://), usar el servidor local por defecto
+          const base = (location.protocol === 'file:') ? 'http://127.0.0.1:8000' : '';
+          const res = await fetch(`${base}/api/calcular_verduras?peso_kg=${encodeURIComponent(valor)}`);
+          if (!res.ok) {
+            const msg = (await res.text()) || 'Error al calcular.';
+            throw new Error(msg);
+          }
+          const data = await res.json();
+          resultado.textContent = `Tu conejo debe comer aproximadamente ${data.gramos} gramos de verduras al día.`;
+        } catch (e) {
+          error.textContent = 'Ocurrió un error: ' + (e?.message || String(e));
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+  </html>
