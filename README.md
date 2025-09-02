@@ -27,7 +27,7 @@ Regla usada: 100 gramos por cada kilogramo de peso (ej.: 1.8 kg → 180 g al dí
 
 3. Abrir la UI:
 
-   - Visita `http://127.0.0.1:8000/` y usa el formulario en español.
+   - Visita `http://127.0.0.1:8000/` y usa el formulario.
    - El endpoint de la API es `GET /api/calcular_verduras?peso_kg=<float>`.
 
 ## Ejecutar tests
