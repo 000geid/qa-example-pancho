@@ -36,5 +36,5 @@ Regla usada: 100 gramos por cada kilogramo de peso (ej.: 1.8 kg → 180 g al dí
 pytest -q
 ```
 
-Esto ilustra la ventaja de automatizar casos de prueba (p. ej., 1.25 kg → 125 g, manejo de entradas inválidas) en lugar de probar cada escenario manualmente desde la UI.
+Esto ilustra la ventaja de automatizar casos de prueba (por ejemplo, 1.25 kg → 125 g, manejo de entradas inválidas, etc.) en lugar de probar cada escenario manualmente desde la UI.
 
